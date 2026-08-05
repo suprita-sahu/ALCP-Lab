@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+struct MinMax {
+    int min;
+    int max;
+};
+
+MinMax findMinMax(const std::vector<int>& arr, int low, int high) {
+    MinMax result, leftResult, rightResult;
+
+    if (low == high) {
+        result.min = arr[low];
+        result.max = arr[low];
+        return result;
+    }
+
+    if (high == low + 1) {
+        if (arr[low] < arr[high]) {
+            result.min = arr[low];
+            result.max = arr[high];
+        } else {
+            result.min = arr[high];
+            result.max = arr[low];
+        }
+        return result;
+    }
+
+    int mid = low + (high - low) / 2;
+    leftResult = findMinMax(arr, low, mid);
+    rightResult = findMinMax(arr, mid + 1, high);
+
+    result.min = std::min(leftResult.min, rightResult.min);
+    result.max = std::max(leftResult.max, rightResult.max);
+
+    return result;
+}
+
+int main() {
+    std::vector<int> arr = {1000, 11, 445, 1, 330, 3000};
+
+    MinMax result = findMinMax(arr, 0, arr.size() - 1);
+
+    std::cout << "Minimum element: " << result.min << std::endl;
+    std::cout << "Maximum element: " << result.max << std::endl;
+
+    return 0;
+}
