@@ -1,0 +1,29 @@
+#include <iostream>
+
+int main() {
+    int n;
+
+    std::cout << "Enter the size of the array (n): ";
+    std::cin >> n;
+
+    if (n <= 0) {
+        std::cout << "Array size must be greater than 0." << std::endl;
+        return 1;
+    }
+
+    double arr[n];
+    double sum = 0.0;
+
+    std::cout << "Enter " << n << " numbers:" << std::endl;
+    for (int i = 0; i < n; ++i) {
+        std::cin >> arr[i];
+        sum += arr[i];
+    }
+
+    double average = sum / n;
+
+    std::cout << "\nSum = " << sum << std::endl;
+    std::cout << "Average = " << average << std::endl;
+
+    return 0;
+}
