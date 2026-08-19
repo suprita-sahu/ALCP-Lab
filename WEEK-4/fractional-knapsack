@@ -1,0 +1,42 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+struct Item{
+int value;
+int weight;
+};
+bool compare(Item a,Item b){
+double r1=(double)a.value/a.weight;
+double r2=(double)b.value/b.weight;
+return r1>r2;
+}
+double fractionalKnapsack(int capacity,vector<Item> &items){
+sort(items.begin(),items.end(),compare);
+double totalvalue=0.0;
+for(size_t i=0;i<items.size();++i){
+if(capacity==0)break;
+if(items[i].weight<=capacity){          
+capacity-=items[i].weight;
+totalvalue+=items[i].value;
+}
+else{
+totalvalue+=items[i].value*((double)capacity/items[i].weight);
+capacity=0;
+}
+}
+return totalvalue;
+}
+int main(){
+int capacity=50;
+vector<Item> items;
+Item item1={60,10};
+Item item2={100,20};
+Item item3={120,30};
+items.push_back(item1);
+items.push_back(item2);
+items.push_back(item3);
+double maxValue=fractionalKnapsack(capacity,items);
+cout<<"Maximum value in Knapsack="<<maxValue;
+return 0;
+}
