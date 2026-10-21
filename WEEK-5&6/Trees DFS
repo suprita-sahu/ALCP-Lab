@@ -1,0 +1,74 @@
+#include <iostream>
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+// 1. Preorder Traversal: Root -> Left -> Right
+void preorder(Node* root) {
+    if (root == NULL) {
+        return;
+    }
+    std::cout << root->data << " ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+// 2. Inorder Traversal: Left -> Root -> Right
+void inorder(Node* root) {
+    if (root == NULL) {
+        return;
+    }
+    inorder(root->left);
+    std::cout << root->data << " ";
+    inorder(root->right);
+}
+
+// 3. Postorder Traversal: Left -> Right -> Root
+void postorder(Node* root) {
+    if (root == NULL) {
+        return;
+    }
+    postorder(root->left);
+    postorder(root->right);
+    std::cout << root->data << " ";
+}
+
+int main() {
+    /* Sample binary tree:
+             1
+           /   \
+          2     3
+         / \     \
+        4   5     6
+    */
+
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->left->right = new Node(5);
+    root->right->right = new Node(6);
+
+    std::cout << "Preorder (Root, L, R) : ";
+    preorder(root);
+    std::cout << "\n";
+
+    std::cout << "Inorder (L, Root, R)  : ";
+    inorder(root);
+    std::cout << "\n";
+
+    std::cout << "Postorder (L, R, Root): ";
+    postorder(root);
+    std::cout << "\n";
+
+    return 0;
+}
