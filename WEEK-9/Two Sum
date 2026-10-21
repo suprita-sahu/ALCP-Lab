@@ -1,0 +1,44 @@
+#include <iostream>
+#include <map>
+
+// Function to find indices of the two numbers that add up to target
+// Returns true if a pair is found, and populates index1 and index2
+bool twoSum(int arr[], int n, int target, int& index1, int& index2) {
+    // Map stores: value -> index
+    std::map<int, int> seen;
+
+    for (int i = 0; i < n; i++) {
+        int complement = target - arr[i];
+
+        // Check if complement already exists in the map
+        if (seen.find(complement) != seen.end()) {
+            index1 = seen[complement];
+            index2 = i;
+            return true;
+        }
+
+        // Store the current number with its index
+        seen[arr[i]] = i;
+    }
+
+    return false; // No pair found
+}
+
+int main() {
+    int arr[] = {2, 7, 11, 15};
+    int target = 9;
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    int idx1 = -1;
+    int idx2 = -1;
+
+    if (twoSum(arr, n, target, idx1, idx2)) {
+        std::cout << "Indices: " << idx1 << ", " << idx2 << std::endl;
+        std::cout << "Values : " << arr[idx1] << " + " << arr[idx2] 
+                  << " = " << target << std::endl;
+    } else {
+        std::cout << "No pair found that sums to " << target << std::endl;
+    }
+
+    return 0;
+}
