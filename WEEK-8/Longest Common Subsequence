@@ -1,0 +1,56 @@
+#include <iostream>
+#include <string>
+
+// Helper max function
+int getMax(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+// Approach 1: Standard 2D DP Table (Computes length & prints the LCS string)
+// Time Complexity: O(m * n), Space Complexity: O(m * n)
+int lcs2D(const std::string& s1, const std::string& s2) {
+    int m = s1.length();
+    int n = s2.length();
+
+    int** dp = new int*[m + 1];
+    for (int i = 0; i <= m; i++) {
+        dp[i] = new int[n + 1];
+    }
+
+    // Build the DP table
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= n; j++) {
+            if (i == 0 || j == 0) {
+                dp[i][j] = 0;
+            } else if (s1[i - 1] == s2[j - 1]) {
+                dp[i][j] = 1 + dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = getMax(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    int lengthLCS = dp[m][n];
+
+    // Reconstruct the actual LCS string by backtracking through the table
+    std::string lcsString = "";
+    int i = m;
+    int j = n;
+    while (i > 0 && j > 0) {
+        if (s1[i - 1] == s2[j - 1]) {
+            lcsString = s1[i - 1] + lcsString;
+            i--;
+            j--;
+        } else if (dp[i - 1][j] > dp[i][j - 1]) {
+            i--;
+        } else {
+            j--;
+        }
+    }
+
+    std::cout << "LCS String: " << lcsString << std::endl;
+
+    // Free allocated memory
+    for (int k = 0; k <= m; k++) {
+        delete[] dp[k];
+    }
