@@ -1,0 +1,73 @@
+#include <iostream>
+
+// Helper max function
+int getMax(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+// Approach 1: Space-Optimized 1D DP
+// Time Complexity: O(N * W), Auxiliary Space: O(W)
+int knapSackOptimized(int W, int wt[], int val[], int n) {
+    int* dp = new int[W + 1];
+    for (int w = 0; w <= W; w++) {
+        dp[w] = 0;
+    }
+
+    for (int i = 0; i < n; i++) {
+        // Traverse backwards so previous state values are not overwritten
+        for (int w = W; w >= wt[i]; w--) {
+            dp[w] = getMax(dp[w], val[i] + dp[w - wt[i]]);
+        }
+    }
+
+    int result = dp[W];
+    delete[] dp;
+    return result;
+}
+
+// Approach 2: Standard 2D Tabulation DP
+// Time Complexity: O(N * W), Auxiliary Space: O(N * W)
+int knapSack2D(int W, int wt[], int val[], int n) {
+    int** dp = new int*[n + 1];
+    for (int i = 0; i <= n; i++) {
+        dp[i] = new int[W + 1];
+    }
+
+    // Build table dp[i][w] bottom-up
+    for (int i = 0; i <= n; i++) {
+        for (int w = 0; w <= W; w++) {
+            if (i == 0 || w == 0) {
+                dp[i][w] = 0;
+            } else if (wt[i - 1] <= w) {
+                dp[i][w] = getMax(val[i - 1] + dp[i - 1][w - wt[i - 1]], dp[i - 1][w]);
+            } else {
+                dp[i][w] = dp[i - 1][w];
+            }
+        }
+    }
+
+    int result = dp[n][W];
+
+    // Free dynamic memory
+    for (int i = 0; i <= n; i++) {
+        delete[] dp[i];
+    }
+    delete[] dp;
+
+    return result;
+}
+
+int main() {
+    int val[] = {60, 100, 120};
+    int wt[] = {10, 20, 30};
+    int W = 50;
+    int n = sizeof(val) / sizeof(val[0]);
+
+    std::cout << "Maximum value (Optimized 1D DP): " 
+              << knapSackOptimized(W, wt, val, n) << std::endl;
+
+    std::cout << "Maximum value (Standard 2D DP) : " 
+              << knapSack2D(W, wt, val, n) << std::endl;
+
+    return 0;
+}
