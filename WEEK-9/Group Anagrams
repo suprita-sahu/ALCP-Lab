@@ -1,0 +1,49 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+// Function to group anagrams together
+std::vector<std::vector<std::string> > groupAnagrams(const std::vector<std::string>& strs) {
+    // Map to group words by their sorted character representation
+    std::map<std::string, std::vector<std::string> > anagramGroups;
+
+    for (int i = 0; i < strs.size(); i++) {
+        std::string key = strs[i];
+        std::sort(key.begin(), key.end()); // Anagrams share the same sorted key
+        anagramGroups[key].push_back(strs[i]);
+    }
+
+    // Collect all grouped anagrams into the result vector
+    std::vector<std::vector<std::string> > result;
+    for (std::map<std::string, std::vector<std::string> >::iterator it = anagramGroups.begin(); 
+         it != anagramGroups.end(); ++it) {
+        result.push_back(it->second);
+    }
+
+    return result;
+}
+
+int main() {
+    std::vector<std::string> words;
+    words.push_back("eat");
+    words.push_back("tea");
+    words.push_back("tan");
+    words.push_back("ate");
+    words.push_back("nat");
+    words.push_back("bat");
+
+    std::vector<std::vector<std::string> > groups = groupAnagrams(words);
+
+    std::cout << "Grouped Anagrams:\n";
+    for (int i = 0; i < groups.size(); i++) {
+        std::cout << "[ ";
+        for (int j = 0; j < groups[i].size(); j++) {
+            std::cout << "\"" << groups[i][j] << "\" ";
+        }
+        std::cout << "]\n";
+    }
+
+    return 0;
+}
