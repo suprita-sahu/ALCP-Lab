@@ -1,0 +1,49 @@
+#include <iostream>
+#include <queue>
+
+// Node structure for adjacency list
+struct AdjListNode {
+    int dest;
+    AdjListNode* next;
+
+    AdjListNode(int d) {
+        dest = d;
+        next = NULL;
+    }
+};
+
+class Graph {
+    int V;                  // Number of vertices
+    AdjListNode** adj;      // Array of adjacency lists
+
+public:
+    Graph(int v) {
+        V = v;
+        adj = new AdjListNode*[V];
+        for (int i = 0; i < V; i++) {
+            adj[i] = NULL;
+        }
+    }
+
+    ~Graph() {
+        for (int i = 0; i < V; i++) {
+            AdjListNode* curr = adj[i];
+            while (curr != NULL) {
+                AdjListNode* temp = curr;
+                curr = curr->next;
+                delete temp;
+            }
+        }
+        delete[] adj;
+    }
+
+    // Function to add an undirected edge between u and v
+    void addEdge(int u, int v) {
+        // Add edge u -> v
+        AdjListNode* newNode = new AdjListNode(v);
+        newNode->next = adj[u];
+        adj[u] = newNode;
+
+        // Add edge v -> u
+        newNode = new AdjListNode(u);
+        newNode->next = adj[v];
