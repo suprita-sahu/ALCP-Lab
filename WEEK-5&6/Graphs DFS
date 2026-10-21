@@ -1,0 +1,121 @@
+#include <iostream>
+
+struct AdjListNode {
+    int dest;
+    AdjListNode* next;
+
+    AdjListNode(int d) {
+        dest = d;
+        next = NULL;
+    }
+};
+
+class Graph {
+    int V;
+    AdjListNode** adj;
+
+    // Helper recursive function for DFS
+    void DFSUtil(int u, bool* visited) {
+        visited[u] = true;
+        std::cout << u << " ";
+
+        AdjListNode* temp = adj[u];
+        while (temp != NULL) {
+            int neighbor = temp->dest;
+            if (!visited[neighbor]) {
+                DFSUtil(neighbor, visited);
+            }
+            temp = temp->next;
+        }
+    }
+
+public:
+    Graph(int v) {
+        V = v;
+        adj = new AdjListNode*[V];
+        for (int i = 0; i < V; i++) {
+            adj[i] = NULL;
+        }
+    }
+
+    ~Graph() {
+        for (int i = 0; i < V; i++) {
+            AdjListNode* curr = adj[i];
+            while (curr != NULL) {
+                AdjListNode* temp = curr;
+                curr = curr->next;
+                delete temp;
+            }
+        }
+        delete[] adj;
+    }
+
+    // Function to add an undirected edge between u and v
+    void addEdge(int u, int v) {
+        // Edge u -> v
+        AdjListNode* newNode = new AdjListNode(v);
+        newNode->next = adj[u];
+        adj[u] = newNode;
+
+        // Edge v -> u
+        newNode = new AdjListNode(u);
+        newNode->next = adj[v];
+        adj[v] = newNode;
+    }
+
+    // DFS starting from a specific source vertex
+    void DFS(int start) {
+        bool* visited = new bool[V];
+        for (int i = 0; i < V; i++) {
+            visited[i] = false;
+        }
+
+        std::cout << "DFS starting from vertex " << start << ": ";
+        DFSUtil(start, visited);
+        std::cout << std::endl;
+
+        delete[] visited;
+    }
+
+    // DFS handling disconnected components
+    void DFSDisconnected() {
+        bool* visited = new bool[V];
+        for (int i = 0; i < V; i++) {
+            visited[i] = false;
+        }
+
+        std::cout << "DFS for all components: ";
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                DFSUtil(i, visited);
+            }
+        }
+        std::cout << std::endl;
+
+        delete[] visited;
+    }
+};
+
+int main() {
+    /* Graph representation:
+         0 --- 1
+         |   / |
+         |  /  |
+         2 --- 3
+           \
+            4
+    */
+
+    Graph g(5);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 2);
+    g.addEdge(1, 3);
+    g.addEdge(2, 3);
+    g.addEdge(2, 4);
+
+    g.DFS(0);
+    g.DFSDisconnected();
+
+    return 0;
+}
